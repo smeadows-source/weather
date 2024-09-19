@@ -4,15 +4,9 @@ import (
 	"fmt"
 	"net/http"
 	"os"
-	"time"
 
 	"github.com/gin-gonic/gin"
 	"github.com/icodealot/noaa"
-	"go.uber.org/ratelimit"
-)
-
-var (
-	limit ratelimit.Limiter
 )
 
 type coordinates struct {
@@ -24,14 +18,6 @@ type points struct {
 	Time    string `json:"Time"`
 	Summary string `json:"summary"`
 	Detail  string `json:"details"`
-}
-
-func limiter() gin.HandlerFunc {
-	prev := time.Now()
-	return func(ctx *gin.Context) {
-		now := limit.Take()
-		prev = now
-	}
 }
 
 func getWeather(ctx *gin.Context) {
@@ -62,7 +48,6 @@ func main() {
 	server := gin.New()
 	server.Use(gin.Logger())
 	server.Use(gin.Recovery())
-	server.Use(limiter)
 
 	server.GET("/weather", getWeather)
 	err := server.Run(":8080")
