@@ -40,7 +40,7 @@ func getWeather(ctx *gin.Context) {
 	point.Detail = period.Periods[0].Details
 
 	ctx.JSON(http.StatusOK, point)
-}
+ 	}
 
 func main() {
 	noaa.SetConfig(noaa.GetConfig())
